@@ -3,3 +3,4 @@ ENV/
 env/
 black-env/
 .vscode/
+katexample
