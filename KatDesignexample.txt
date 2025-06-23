@@ -1,0 +1,74 @@
+from qiskit_metal.qlibrary.qubits.transmon_pocket import TransmonPocket
+
+from qiskit_metal.qlibrary.tlines.meandered import RouteMeander
+
+from qiskit_metal.qlibrary.terminations.open_to_ground import OpenToGround
+
+from qiskit_metal import designs, MetalGUI
+
+design = designs.DesignPlanar()
+
+gui = MetalGUI(design)
+
+
+# WARNING
+# options_connection_pads failed to have a value
+Q1 = TransmonPocket(
+    design,
+    name="Q1",
+    options={
+        "connection_pads": {
+            "readout": {
+                "cpw_extend": "100um",
+                "cpw_gap": "cpw_gap",
+                "cpw_width": "cpw_width",
+                "loc_H": 1,
+                "loc_W": 1,
+                "pad_cpw_extent": "25um",
+                "pad_cpw_shift": "5um",
+                "pad_gap": "15um",
+                "pad_height": "30um",
+                "pad_width": "200um",
+                "pocket_extent": "5um",
+                "pocket_rise": "65um",
+            }
+        },
+        "pad_width": "425 um",
+    },
+)
+
+
+open_to_ground = OpenToGround(
+    design,
+    name="open_to_ground",
+    options={"orientation": "0", "pos_x": "1.75mm", "pos_y": "0um"},
+    component_template=None,
+)
+
+
+readout = RouteMeander(
+    design,
+    name="readout",
+    options={
+        "_actual_length": "5.999999999999999 " "mm",
+        "fillet": "90 um",
+        "hfss_wire_bonds": True,
+        "lead": {
+            "end_jogged_extension": "",
+            "end_straight": "0mm",
+            "start_jogged_extension": "",
+            "start_straight": "100um",
+        },
+        "pin_inputs": {
+            "end_pin": {"component": "open_to_ground", "pin": "open"},
+            "start_pin": {"component": "Q1", "pin": "readout"},
+        },
+        "total_length": "6 mm",
+        "trace_gap": "cpw_gap",
+    },
+    type="CPW",
+)
+
+
+gui.rebuild()
+gui.autoscale()
